@@ -26,10 +26,12 @@ Vue.use(DropdownItem)
 
 //路由引入
 import router from './router'
+import store from './store'
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
+  store, //把store挂载到vue实例上
   render: (h) => h(App),
 }).$mount('#app')

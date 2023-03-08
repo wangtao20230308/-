@@ -40,7 +40,7 @@
 export default {
   data() {
     return {
-      isCollapse: false,
+      // isCollapse: false,
       menuData: [
         {
           path: '/',
@@ -95,7 +95,7 @@ export default {
     },
     clickMenu(item) {
       console.log('======', item)
-      this.$router.push(item.path)
+      if (this.$route.path !== item.path && !(this.$route.path === '/home' && item.path === '/')) this.$router.push(item.path)
     },
   },
   computed: {
@@ -106,6 +106,9 @@ export default {
     //有子菜单的导航栏-->其他
     hasChildrenMenu() {
       return this.menuData.filter((item) => item.children)
+    },
+    isCollapse() {
+      return this.$store.state.tab.isCollapse
     },
   },
 }
