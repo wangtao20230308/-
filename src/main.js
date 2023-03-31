@@ -7,7 +7,39 @@ import App from './App.vue'
 // Vue.use(ElementUI);
 
 //ele按需导入
-import { Button, Radio, Container, Aside, Header, Main, Menu, Submenu, MenuItemGroup, MenuItem, Dropdown, DropdownMenu, DropdownItem } from 'element-ui'
+import {
+  Message,
+  Pagination,
+  MessageBox,
+  DatePicker,
+  Select,
+  Option,
+  Form,
+  FormItem,
+  Input,
+  Dialog,
+  Tag,
+  Breadcrumb,
+  BreadcrumbItem,
+  Table,
+  TableColumn,
+  Col,
+  Row,
+  Card,
+  Button,
+  Radio,
+  Container,
+  Aside,
+  Header,
+  Main,
+  Menu,
+  Submenu,
+  MenuItemGroup,
+  MenuItem,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/less/index.less'
 Vue.use(Button)
@@ -23,15 +55,57 @@ Vue.use(MenuItem)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Card)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Tag)
+Vue.use(Dialog)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Input)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(DatePicker)
+Vue.use(Pagination)
+
+Vue.component(MessageBox.name, MessageBox) // 全局注册组件， 若使用Vue.use()会再初始时候执行一次，有bug
+Vue.prototype.$message = MessageBox // 挂载到vm实例上
+Vue.prototype.$confirm = MessageBox // 挂载到vm实例上
+
+Vue.component(Message.name, Message) // 全局注册组件， 若使用Vue.use()会再初始时候执行一次，有bug
+Vue.prototype.$message = Message // 挂载到vm实例上
 
 //路由引入
 import router from './router'
 import store from './store'
+import './api/mock'
+import Cookie from 'js-cookie'
 
 Vue.config.productionTip = false
+
+//添加全局导航守卫
+router.beforeEach((to, from, next) => {
+  //判断token是否存在
+  const token = Cookie.get('token')
+  //如果token不存在，应该跳转至登录页
+  if (!token && to.name !== 'login') {
+    next({ name: 'login' })
+  } else if (token && to.name === 'login') {
+    next({ name: 'home' })
+  } else {
+    next()
+  }
+})
 
 new Vue({
   router,
   store, //把store挂载到vue实例上
   render: (h) => h(App),
+  created() {
+    store.commit('addMenu', router)
+  },
 }).$mount('#app')
